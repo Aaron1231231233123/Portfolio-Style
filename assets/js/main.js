@@ -2,6 +2,8 @@ const themeKey = 'djs-portfolio-theme';
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
+let showInlineAlert;
+
 const smoothScrollTo = selector => {
   const target = document.querySelector(selector);
   if (!target) return;
@@ -34,6 +36,57 @@ const toggleTheme = () => {
   const next = current === 'dark' ? 'light' : 'dark';
   document.body.dataset.theme = next;
   localStorage.setItem(themeKey, next);
+};
+
+const initInlineAlert = () => {
+  const modal = document.querySelector('.alert-modal');
+  if (!modal) return;
+
+  const labelEl = modal.querySelector('[data-alert-label]');
+  const messageEl = modal.querySelector('[data-alert-message]');
+  const closeEls = modal.querySelectorAll('[data-alert-close]');
+
+  let lastActiveElement = null;
+
+  const close = () => {
+    modal.setAttribute('aria-hidden', 'true');
+    if (lastActiveElement && typeof lastActiveElement.focus === 'function') {
+      lastActiveElement.focus();
+    }
+  };
+
+  showInlineAlert = (message, tone = 'info') => {
+    lastActiveElement = document.activeElement;
+    if (labelEl) {
+      labelEl.textContent = tone === 'error' ? 'Something went wrong' : 'Heads up';
+    }
+    if (messageEl) {
+      messageEl.textContent = message;
+    }
+
+    modal.setAttribute('aria-hidden', 'false');
+
+    const primaryButton = modal.querySelector('[data-alert-close]');
+    if (primaryButton instanceof HTMLElement) {
+      primaryButton.focus();
+    }
+  };
+
+  closeEls.forEach(el => {
+    el.addEventListener('click', () => close());
+  });
+
+  modal.addEventListener('click', evt => {
+    if (evt.target instanceof HTMLElement && evt.target.hasAttribute('data-alert-close')) {
+      close();
+    }
+  });
+
+  window.addEventListener('keydown', evt => {
+    if (evt.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') {
+      close();
+    }
+  });
 };
 
 const initNav = () => {
@@ -406,6 +459,348 @@ const initSliders = () => {
   updateSummary();
 };
 
+const initImagePlayground = () => {
+  const stage = document.querySelector('[data-image-stage]');
+  const figure = document.querySelector('[data-image-figure]');
+  const img = document.querySelector('[data-playground-image]');
+  const modeButtons = document.querySelectorAll('[data-hover-mode]');
+  const intensityInput = document.querySelector('[data-image-intensity]');
+  const uploadInput = document.querySelector('[data-image-upload]');
+  const urlInput = document.querySelector('[data-image-url]');
+  const useUrlButton = document.querySelector('[data-image-use-url]');
+  const downloadButton = document.querySelector('[data-image-download]');
+  const caption = document.querySelector('[data-image-caption]');
+  const hint = document.querySelector('[data-image-hint]');
+  const modeDescription = document.querySelector('[data-image-mode-description]');
+  const mixButtons = document.querySelectorAll('[data-effect-layer]');
+  const mixCaption = document.querySelector('[data-image-mix-caption]');
+
+  if (!stage || !figure || !img || !intensityInput) return;
+
+  let currentMode = 'orbit';
+  let intensity = Number(intensityInput.value) || 65;
+  let canvasFilter = 'none';
+  let tiltActive = false;
+  let activeLayers = [];
+
+  const modeCopy = {
+    orbit: 'Orbit glow — a cinematic halo that keeps attention anchored on the subject.',
+    glitch: 'Soft glitch — subtle jitter and color shifts for a restless, high-energy feeling.',
+    tilt:
+      'Parallax tilt — the image leans with your pointer or arrow keys, like a physical card in your hand.',
+    liquid:
+      'Liquid bloom — edges melt and bloom, turning the image into a soft, dreamy portal.',
+    scan:
+      'Scanlines — a retro display treatment that makes the whole frame feel like a living monitor.',
+    chromatic:
+      'Chromatic drift — cyan and magenta halos leak from the highlights, hinting at motion and depth.',
+    mono:
+      'Noir focus — drained color and heavier contrast, like a still pulled from a graphic novel.'
+  };
+
+  const setMode = mode => {
+    currentMode = mode;
+    figure.classList.remove(
+      'image-playground-figure--orbit',
+      'image-playground-figure--glitch',
+      'image-playground-figure--tilt',
+      'image-playground-figure--liquid',
+      'image-playground-figure--scan',
+      'image-playground-figure--chromatic',
+      'image-playground-figure--mono'
+    );
+    figure.classList.add(`image-playground-figure--${mode}`);
+
+    modeButtons.forEach(btn =>
+      btn.classList.toggle('is-active', btn.getAttribute('data-hover-mode') === mode)
+    );
+
+    if (hint) {
+      if (mode === 'tilt') {
+        hint.textContent = 'Move your cursor or use the arrow keys to tilt the image.';
+      } else if (mode === 'glitch') {
+        hint.textContent = 'Hover to trigger a soft glitch pulse. Drag to exaggerate it.';
+      } else if (mode === 'liquid') {
+        hint.textContent = 'Hover and adjust intensity to melt the edges into a liquid bloom.';
+      } else if (mode === 'scan') {
+        hint.textContent = 'Hover to reveal scanlines, like an old display trying to keep up.';
+      } else if (mode === 'chromatic') {
+        hint.textContent = 'Hover to pull cyan and magenta halos off the brightest edges.';
+      } else if (mode === 'mono') {
+        hint.textContent = 'Use this to check how the composition reads when color is almost gone.';
+      } else {
+        hint.textContent = 'Hover, drag, or press keys 1–7 to cycle the interaction recipes.';
+      }
+    }
+
+    if (modeDescription) {
+      modeDescription.textContent = modeCopy[mode] || '';
+    }
+
+    applyVisuals();
+  };
+
+  const applyVisuals = () => {
+    const level = clamp(intensity, 0, 100) / 100;
+    const filterParts = [];
+    let scale = 1 + 0.06 * level;
+    let glow = 0.35 + 0.65 * level;
+
+    if (currentMode === 'orbit') {
+      filterParts.push(`saturate(${1 + 0.7 * level})`);
+      filterParts.push(`contrast(${1 + 0.2 * level})`);
+    } else if (currentMode === 'glitch') {
+      const hue = 20 + 80 * level;
+      filterParts.push(`contrast(${1.15 + 0.6 * level})`);
+      filterParts.push(`saturate(${1.4 + level})`);
+      filterParts.push(`hue-rotate(${hue}deg)`);
+      scale = 1 + 0.04 * level;
+    } else if (currentMode === 'tilt') {
+      filterParts.push(`saturate(${1 + 0.5 * level})`);
+      scale = 1 + 0.03 * level;
+    } else if (currentMode === 'liquid') {
+      const blur = (level * 4).toFixed(2);
+      filterParts.push(`saturate(${1.3 + 0.7 * level})`);
+      filterParts.push(`blur(${blur}px)`);
+      scale = 1 + 0.08 * level;
+    }
+
+    // Layer contributions (mix up to 3 extras)
+    if (activeLayers.includes('scan')) {
+      const brightness = 1.02 + 0.18 * level;
+      const contrast = 1.05 + 0.28 * level;
+      filterParts.push(`brightness(${brightness})`);
+      filterParts.push(`contrast(${contrast})`);
+      filterParts.push(`saturate(${0.9 + 0.3 * level})`);
+    }
+
+    if (activeLayers.includes('chromatic')) {
+      const hueOverlay = 6 + 14 * level;
+      filterParts.push(`saturate(${1.2 + 0.5 * level})`);
+      filterParts.push(`contrast(${1.03 + 0.25 * level})`);
+      filterParts.push(`hue-rotate(${hueOverlay}deg)`);
+    }
+
+    if (activeLayers.includes('mono')) {
+      const grayscale = 0.4 + 0.4 * level;
+      const contrast = 1.1 + 0.35 * level;
+      filterParts.push(`grayscale(${grayscale})`);
+      filterParts.push(`contrast(${contrast})`);
+    }
+
+    if (activeLayers.includes('grain')) {
+      filterParts.push(`contrast(${1.02 + 0.12 * level})`);
+    }
+
+    if (activeLayers.includes('vignette')) {
+      filterParts.push(`brightness(${0.98 - 0.12 * level})`);
+    }
+
+    const filter = filterParts.length ? filterParts.join(' ') : 'none';
+
+    figure.style.setProperty('--img-scale', String(scale));
+    figure.style.setProperty('--img-glow', String(glow));
+    figure.style.setProperty('--img-filter', filter);
+    canvasFilter = filter;
+  };
+
+  const updateMixCaption = () => {
+    if (!mixCaption) return;
+    if (!activeLayers.length) {
+      mixCaption.textContent = 'Toggle up to three chips to layer extras on top of the base recipe.';
+      return;
+    }
+    const names = activeLayers.join(', ');
+    mixCaption.textContent = `Currently stacking: ${names} (${activeLayers.length}/3). Click again to remove.`;
+  };
+
+  const syncLayersToFigure = () => {
+    const allLayerClasses = [
+      'image-layer--scan',
+      'image-layer--chromatic',
+      'image-layer--mono',
+      'image-layer--grain',
+      'image-layer--vignette'
+    ];
+    allLayerClasses.forEach(cls => figure.classList.remove(cls));
+    activeLayers.forEach(id => {
+      figure.classList.add(`image-layer--${id}`);
+    });
+  };
+
+  const toggleLayer = id => {
+    const existingIndex = activeLayers.indexOf(id);
+    if (existingIndex !== -1) {
+      activeLayers.splice(existingIndex, 1);
+    } else {
+      if (activeLayers.length >= 3) {
+        // Remove the oldest layer to make space for the new one
+        activeLayers.shift();
+      }
+      activeLayers.push(id);
+    }
+
+    mixButtons.forEach(btn => {
+      const layerId = btn.getAttribute('data-effect-layer');
+      btn.classList.toggle('is-active', !!layerId && activeLayers.includes(layerId));
+    });
+
+    syncLayersToFigure();
+    updateMixCaption();
+    applyVisuals();
+  };
+
+  const handlePointerMove = evt => {
+    const rect = stage.getBoundingClientRect();
+    const x = (evt.clientX - rect.left) / rect.width - 0.5;
+    const y = (evt.clientY - rect.top) / rect.height - 0.5;
+
+    const maxTilt = currentMode === 'tilt' ? 18 : 8;
+    const tiltX = clamp(-x * maxTilt, -maxTilt, maxTilt);
+    const tiltY = clamp(y * maxTilt, -maxTilt, maxTilt);
+    figure.style.setProperty('--tilt-x', `${tiltX}deg`);
+    figure.style.setProperty('--tilt-y', `${tiltY}deg`);
+    tiltActive = true;
+  };
+
+  const resetTilt = () => {
+    if (!tiltActive) return;
+    figure.style.setProperty('--tilt-x', '0deg');
+    figure.style.setProperty('--tilt-y', '0deg');
+    tiltActive = false;
+  };
+
+  stage.addEventListener('pointermove', handlePointerMove);
+  stage.addEventListener('pointerleave', resetTilt);
+
+  intensityInput.addEventListener('input', () => {
+    intensity = Number(intensityInput.value) || 65;
+    applyVisuals();
+  });
+
+  modeButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mode = btn.getAttribute('data-hover-mode');
+      if (mode) setMode(mode);
+    });
+  });
+
+  mixButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-effect-layer');
+      if (!id) return;
+      toggleLayer(id);
+    });
+  });
+
+  stage.addEventListener('keydown', evt => {
+    if (evt.key === '1') setMode('orbit');
+    if (evt.key === '2') setMode('glitch');
+    if (evt.key === '3') setMode('tilt');
+    if (evt.key === '4') setMode('liquid');
+    if (evt.key === '5') setMode('scan');
+    if (evt.key === '6') setMode('chromatic');
+    if (evt.key === '7') setMode('mono');
+
+    if (currentMode === 'tilt') {
+      const step = 4;
+      if (evt.key === 'ArrowLeft') {
+        evt.preventDefault();
+        const current = parseFloat(getComputedStyle(figure).getPropertyValue('--tilt-x')) || 0;
+        figure.style.setProperty('--tilt-x', `${clamp(current - step, -18, 18)}deg`);
+      }
+      if (evt.key === 'ArrowRight') {
+        evt.preventDefault();
+        const current = parseFloat(getComputedStyle(figure).getPropertyValue('--tilt-x')) || 0;
+        figure.style.setProperty('--tilt-x', `${clamp(current + step, -18, 18)}deg`);
+      }
+      if (evt.key === 'ArrowUp') {
+        evt.preventDefault();
+        const current = parseFloat(getComputedStyle(figure).getPropertyValue('--tilt-y')) || 0;
+        figure.style.setProperty('--tilt-y', `${clamp(current - step, -18, 18)}deg`);
+      }
+      if (evt.key === 'ArrowDown') {
+        evt.preventDefault();
+        const current = parseFloat(getComputedStyle(figure).getPropertyValue('--tilt-y')) || 0;
+        figure.style.setProperty('--tilt-y', `${clamp(current + step, -18, 18)}deg`);
+      }
+    }
+  });
+
+  if (uploadInput) {
+    uploadInput.addEventListener('change', () => {
+      const file = uploadInput.files && uploadInput.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          img.src = reader.result;
+          if (caption) {
+            caption.textContent =
+              'Using your uploaded image. Try different recipes and save a PNG of this moment.';
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (useUrlButton && urlInput) {
+    useUrlButton.addEventListener('click', () => {
+      const value = urlInput.value.trim();
+      if (!value) return;
+      img.src = value;
+      if (caption) {
+        caption.textContent =
+          'Using a remote image. Animated GIFs keep moving; saved PNG will capture the current frame with filters.';
+      }
+    });
+  }
+
+  if (downloadButton) {
+    let downloadCanvas;
+    downloadButton.addEventListener('click', () => {
+      if (!img.complete || !img.naturalWidth || !img.naturalHeight) return;
+
+      downloadCanvas = downloadCanvas || document.createElement('canvas');
+      downloadCanvas.width = img.naturalWidth;
+      downloadCanvas.height = img.naturalHeight;
+      const ctx = downloadCanvas.getContext('2d');
+      if (!ctx) return;
+
+      try {
+        ctx.clearRect(0, 0, downloadCanvas.width, downloadCanvas.height);
+        ctx.filter = canvasFilter || 'none';
+        ctx.drawImage(img, 0, 0, downloadCanvas.width, downloadCanvas.height);
+        const dataUrl = downloadCanvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = 'interaction-playground.png';
+        link.click();
+        if (typeof showInlineAlert === 'function') {
+          showInlineAlert(
+            'Saved a PNG of the current frame with your current effects. Check your downloads folder.',
+            'info'
+          );
+        } else if (caption) {
+          caption.textContent = 'PNG saved. You just captured a tiny moment from this orbit.';
+        }
+      } catch (err) {
+        const message =
+          'Your browser blocked saving this URL for security reasons. Upload the image directly to save it.';
+        if (typeof showInlineAlert === 'function') {
+          showInlineAlert(message, 'error');
+        } else if (caption) {
+          caption.textContent = message;
+        }
+      }
+    });
+  }
+
+  // Initialize with default mode visuals.
+  setMode(currentMode);
+};
+
 const playWarp = () => {
   const warp = document.querySelector('.page-warp');
   if (!warp) return;
@@ -564,6 +959,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initParallaxCanvas();
   initProjectModal();
   initSliders();
+  initImagePlayground();
+   initInlineAlert();
   initIntroGate();
   initOrbitPanel();
   initRevealOnScroll();

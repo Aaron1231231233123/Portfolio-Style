@@ -134,13 +134,17 @@
     <main>
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-primary">
-          <p class="hero-kicker">Interactive portfolio</p>
+          <p class="hero-kicker">
+            Interactive portfolio · An information systems developer and relentlessly hungry builder
+          </p>
           <h1 id="hero-title" class="hero-title">
             Hi, I'm <span class="hero-name">Denielle&nbsp;James&nbsp;Sombong</span>
           </h1>
           <p class="hero-subtitle">
-            I build playful, high-impact web experiences designed for humans,
-            hiring teams, and creators.
+            Sometimes called the “LeBron James of information systems” and mentored by
+            LeBron himself, I can solo an entire project — from thesis code and
+            manuscripts to custom Python libraries and relationship‑driven tools for
+            teams.
           </p>
 
           <div class="hero-actions">
@@ -370,70 +374,227 @@
           <h2 class="section-title">Interaction playground</h2>
           <p class="section-subtitle">
             A safe space to feel the design language — hover, drag, and press
-            keys to see how the interface responds. The controls below change the
-            copy, color, and overall mood of this card so you can sense the design
-            trade‑offs in real time.
+            keys to see how the interface responds. Below are two cards tuned for
+            micro-movements, and a live image lab where you can mutate the
+            artwork itself in real time.
           </p>
         </header>
 
         <div class="playground-grid">
-          <article class="card card--play reveal" aria-label="Interactive sliders">
-            <h3>Attention sliders</h3>
-            <p>
-              Move the knobs to see how I balance clarity, play, and speed when
-              designing an experience.
-            </p>
-            <div class="slider-group">
-              <label>
-                Clarity
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value="80"
-                  data-play-slider="clarity"
-                />
-              </label>
-              <label>
-                Playfulness
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value="65"
-                  data-play-slider="play"
-                />
-              </label>
-              <label>
-                Speed to insight
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value="90"
-                  data-play-slider="speed"
-                />
-              </label>
-            </div>
-            <p class="slider-summary" data-slider-summary>
-              Drag the sliders — this description will adapt to match the balance you
-              choose between clarity, play, and speed.
-            </p>
-          </article>
-
           <article
-            class="card card--play reveal"
-            aria-label="Focus trail"
+            class="card card--play card--image-playground reveal"
+            aria-label="Image interaction lab"
           >
-            <h3>Focus trail</h3>
+            <h3>Image interaction lab</h3>
             <p>
-              Press <kbd>Tab</kbd> to move through this card and watch how focus
-              is visualized without overwhelming the content.
+              Drop in an image, pick a hover recipe, and drag or press keys
+              <kbd>1–4</kbd> to feel how tiny changes in motion, glow, and blur
+              shift the mood.
             </p>
-            <div class="focus-demo">
-              <button class="chip" type="button">Primary action</button>
-              <button class="chip" type="button">Secondary action</button>
-              <button class="chip" type="button">Tertiary action</button>
+
+            <div class="image-playground">
+              <div
+                class="image-playground-stage"
+                data-image-stage
+                tabindex="0"
+                aria-label="Interactive image stage"
+              >
+                <figure
+                  class="image-playground-figure image-playground-figure--orbit"
+                  data-image-figure
+                >
+                  <img
+                    src="./assets/img/Babyque.jpg"
+                    alt="Playground artwork"
+                    loading="lazy"
+                    data-playground-image
+                  />
+                  <div class="image-playground-ring" aria-hidden="true"></div>
+                  <div class="image-playground-orbit-dot" aria-hidden="true"></div>
+                  <div class="image-playground-hint" data-image-hint>
+                    Hover, drag, or press keys <span>1–7</span>.
+                  </div>
+                </figure>
+              </div>
+
+              <div class="image-playground-controls">
+                <div class="image-playground-row">
+                  <span class="image-playground-label">Interaction recipe</span>
+                  <div
+                    class="image-playground-pills"
+                    role="listbox"
+                    aria-label="Interaction recipe"
+                    data-hover-mode-list
+                  >
+                    <button
+                      type="button"
+                      class="pill pill--mode is-active"
+                      data-hover-mode="orbit"
+                    >
+                      Orbit glow
+                    </button>
+                    <button
+                      type="button"
+                      class="pill pill--mode"
+                      data-hover-mode="glitch"
+                    >
+                      Soft glitch
+                    </button>
+                    <button
+                      type="button"
+                      class="pill pill--mode"
+                      data-hover-mode="tilt"
+                    >
+                      Parallax tilt
+                    </button>
+                    <button
+                      type="button"
+                      class="pill pill--mode"
+                      data-hover-mode="liquid"
+                    >
+                      Liquid bloom
+                    </button>
+                    <button
+                      type="button"
+                      class="pill pill--mode"
+                      data-hover-mode="scan"
+                    >
+                      Scanlines
+                    </button>
+                    <button
+                      type="button"
+                      class="pill pill--mode"
+                      data-hover-mode="chromatic"
+                    >
+                      Chromatic drift
+                    </button>
+                    <button
+                      type="button"
+                      class="pill pill--mode"
+                      data-hover-mode="mono"
+                    >
+                      Noir focus
+                    </button>
+                  </div>
+                </div>
+
+                <p class="image-mode-description" data-image-mode-description>
+                  Orbit glow — a cinematic halo that keeps attention anchored on the subject.
+                </p>
+
+                <div class="image-playground-row image-playground-row--mix">
+                  <span class="image-playground-label">
+                    Custom stack
+                    <span class="image-playground-label-sub">
+                      (mix up to 3 extras)
+                    </span>
+                  </span>
+                  <div class="image-playground-mix" data-image-mix-list>
+                    <button
+                      type="button"
+                      class="pill pill--mix"
+                      data-effect-layer="scan"
+                    >
+                      Scanlines
+                    </button>
+                    <button
+                      type="button"
+                      class="pill pill--mix"
+                      data-effect-layer="chromatic"
+                    >
+                      Chromatic drift
+                    </button>
+                    <button
+                      type="button"
+                      class="pill pill--mix"
+                      data-effect-layer="mono"
+                    >
+                      Noir focus
+                    </button>
+                    <button
+                      type="button"
+                      class="pill pill--mix"
+                      data-effect-layer="grain"
+                    >
+                      Film grain
+                    </button>
+                    <button
+                      type="button"
+                      class="pill pill--mix"
+                      data-effect-layer="vignette"
+                    >
+                      Vignette
+                    </button>
+                  </div>
+                  <p class="image-mix-caption" data-image-mix-caption>
+                    Toggle up to three chips to layer extras on top of the base recipe.
+                  </p>
+                </div>
+
+                <div class="image-playground-row">
+                  <label class="image-playground-label" for="image-intensity">
+                    Intensity
+                  </label>
+                  <input
+                    id="image-intensity"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value="65"
+                    data-image-intensity
+                  />
+                </div>
+
+                <div class="image-playground-row image-playground-row--io">
+                  <div class="image-uploader">
+                    <label class="image-playground-label" for="image-upload">
+                      Upload image
+                    </label>
+                    <input
+                      id="image-upload"
+                      type="file"
+                      accept="image/*"
+                      class="image-upload-input"
+                      data-image-upload
+                    />
+                  </div>
+                  <div class="image-url">
+                    <label class="image-playground-label" for="image-url">
+                      Paste image URL (PNG, JPG, GIF, etc.)
+                    </label>
+                    <div class="image-url-input-row">
+                      <input
+                        id="image-url"
+                        type="url"
+                        placeholder="https://... from Pinterest or anywhere"
+                        class="image-url-input"
+                        data-image-url
+                      />
+                      <button
+                        type="button"
+                        class="btn btn--ghost btn--tiny"
+                        data-image-use-url
+                      >
+                        Use URL
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="image-playground-row image-playground-row--actions">
+                  <button
+                    type="button"
+                    class="btn btn--primary btn--tiny"
+                    data-image-download
+                  >
+                    Save current frame
+                  </button>
+                  <p class="image-playground-caption" data-image-caption>
+                    Works with PNG, JPG, and animated GIF URLs. Saved files flatten
+                    the current filters into a shareable PNG.
+                  </p>
+                </div>
+              </div>
             </div>
           </article>
         </div>
@@ -552,6 +713,30 @@
             Return to gallery
           </button>
         </footer>
+      </div>
+    </section>
+
+    <section
+      class="alert-modal"
+      aria-modal="true"
+      aria-hidden="true"
+      role="dialog"
+    >
+      <div class="alert-modal-backdrop" data-alert-close></div>
+      <div class="alert-modal-shell" role="document">
+        <div class="alert-modal-body">
+          <p class="alert-modal-label" data-alert-label>Heads up</p>
+          <p class="alert-modal-message" data-alert-message></p>
+        </div>
+        <div class="alert-modal-footer">
+          <button
+            type="button"
+            class="btn btn--primary btn--tiny"
+            data-alert-close
+          >
+            Got it
+          </button>
+        </div>
       </div>
     </section>
 
