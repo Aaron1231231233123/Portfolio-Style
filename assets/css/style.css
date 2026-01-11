@@ -675,9 +675,21 @@ body:not([data-theme='dark']) .mode-toggle-icon--sun {
 }
 
 .grid--about {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1.5rem;
+  align-items: flex-start;
+}
+
+/* About cards: three-up row on desktop, independent heights on hover */
+.card--about {
+  flex: 1 1 calc(33.333% - 1rem);
+}
+
+/* Slightly taller height for the first and third About cards */
+.grid--about .card--about:nth-child(1),
+.grid--about .card--about:nth-child(3) {
+  min-height: 155px;
 }
 
 .card {
@@ -766,8 +778,9 @@ body:not([data-theme='dark']) .mode-toggle-icon--sun {
   background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.18), transparent 55%),
     radial-gradient(circle at 100% 100%, rgba(251, 146, 60, 0.16), transparent 60%),
     linear-gradient(to bottom right, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.9));
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  box-shadow: 0 20px 55px rgba(15, 23, 42, 0.9);
+  min-height: 180px;
   cursor: pointer;
   overflow: hidden;
   outline: none;
@@ -775,16 +788,50 @@ body:not([data-theme='dark']) .mode-toggle-icon--sun {
   transition:
     transform var(--transition-med),
     box-shadow var(--transition-med),
-    border-color var(--transition-med);
+    border-color var(--transition-med),
+    background var(--transition-med);
+}
+
+/* Soft inner orbit outline that fades in on hover/active */
+.project-card::before {
+  content: '';
+  position: absolute;
+  inset: 0.85rem;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.0);
+  opacity: 0;
+  pointer-events: none;
+  box-shadow:
+    0 0 0 1px rgba(15, 23, 42, 0.7),
+    0 0 35px rgba(59, 130, 246, 0.35);
+  background:
+    radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.08), transparent 55%),
+    radial-gradient(circle at 100% 100%, rgba(129, 140, 248, 0.08), transparent 55%);
+  transform: scale(0.98);
+  transition:
+    opacity var(--transition-slow),
+    border-color var(--transition-med),
+    transform var(--transition-slow);
 }
 
 .project-card:hover,
 .project-card:focus-visible {
-  transform: translateY(-6px) scale(1.02) translateZ(0);
+  transform: translateY(-4px) scale(1.01) translateZ(0);
   box-shadow:
     0 0 0 1px rgba(15, 23, 42, 0.9),
-    0 30px 70px rgba(15, 23, 42, 0.95);
-  border-color: rgba(129, 140, 248, 0.9);
+    0 32px 80px rgba(15, 23, 42, 1);
+  border-color: rgba(129, 140, 248, 0.7);
+  background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.24), transparent 55%),
+    radial-gradient(circle at 100% 100%, rgba(251, 146, 60, 0.22), transparent 60%),
+    linear-gradient(to bottom right, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.92));
+}
+
+.project-card:hover::before,
+.project-card:focus-visible::before,
+.project-card--active::before {
+  opacity: 1;
+  border-color: rgba(148, 163, 184, 0.7);
+  transform: scale(1);
 }
 
 .project-card-orbit {
@@ -1271,6 +1318,89 @@ body:not([data-theme='dark']) .mode-toggle-icon--sun {
   height: 12rem;
 }
 
+/* Planets for modal orbit */
+.project-modal-planet {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 999px;
+  transform-origin: center center;
+  box-shadow: 0 0 26px rgba(15, 23, 42, 0.85);
+}
+
+.project-modal-planet--saturn {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: radial-gradient(circle at 30% 25%, #fef3c7, #f97316);
+  box-shadow:
+    0 0 24px rgba(249, 115, 22, 0.9),
+    0 0 55px rgba(251, 191, 36, 0.75);
+  position: relative;
+  z-index: 2;
+  animation: modalPlanetOrbitSaturn 34s linear infinite;
+}
+
+/* Broad luminous ring behind the planet */
+.project-modal-planet--saturn::before {
+  content: '';
+  position: absolute;
+  inset: 50%;
+  width: 4.3rem;
+  height: 2.1rem;
+  transform: translate(-50%, -50%) rotate(18deg);
+  border-radius: 999px;
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(254, 249, 195, 0.9) 0%,
+      rgba(253, 224, 171, 0.3) 40%,
+      transparent 70%
+    );
+  opacity: 0.9;
+  z-index: -1;
+  box-shadow:
+    0 0 26px rgba(251, 191, 36, 0.7),
+    0 0 46px rgba(248, 250, 252, 0.5);
+}
+
+/* Front highlight edge of the ring */
+.project-modal-planet--saturn::after {
+  content: '';
+  position: absolute;
+  inset: 50%;
+  width: 3.9rem;
+  height: 1.7rem;
+  transform: translate(-50%, -50%) rotate(18deg);
+  border-radius: 999px;
+  border: 2px solid rgba(248, 250, 252, 0.9);
+  border-left-color: transparent;
+  border-right-color: transparent;
+  opacity: 0.9;
+  box-shadow:
+    0 0 20px rgba(248, 250, 252, 0.6),
+    0 0 32px rgba(251, 191, 36, 0.55);
+}
+
+.project-modal-planet--jupiter {
+  width: 2.1rem;
+  height: 2.1rem;
+  background: radial-gradient(circle at 28% 24%, #fee2e2, #f97316);
+  box-shadow:
+    0 0 20px rgba(248, 113, 113, 0.9),
+    0 0 45px rgba(248, 113, 113, 0.7);
+  animation: modalPlanetOrbitJupiter 40s linear infinite;
+}
+
+.project-modal-planet--uranus {
+  width: 1.9rem;
+  height: 1.9rem;
+  background: radial-gradient(circle at 30% 25%, #e0f2fe, #38bdf8);
+  box-shadow:
+    0 0 20px rgba(56, 189, 248, 0.9),
+    0 0 40px rgba(56, 189, 248, 0.7);
+  animation: modalPlanetOrbitUranus 46s linear infinite;
+}
+
 .project-modal-content {
   font-size: 0.87rem;
   color: var(--muted);
@@ -1333,6 +1463,33 @@ body:not([data-theme='dark']) .mode-toggle-icon--sun {
 
 .project-modal-orbit-ring--three {
   animation-duration: 52s;
+}
+
+@keyframes modalPlanetOrbitSaturn {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) translate(5.6rem, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg) translate(5.6rem, 0) rotate(-360deg);
+  }
+}
+
+@keyframes modalPlanetOrbitJupiter {
+  0% {
+    transform: translate(-50%, -50%) rotate(55deg) translate(4.4rem, 0) rotate(-55deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(415deg) translate(4.4rem, 0) rotate(-415deg);
+  }
+}
+
+@keyframes modalPlanetOrbitUranus {
+  0% {
+    transform: translate(-50%, -50%) rotate(130deg) translate(3.2rem, 0) rotate(-130deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(490deg) translate(3.2rem, 0) rotate(-490deg);
+  }
 }
 
 @keyframes modalShellPop {
@@ -1894,7 +2051,7 @@ body[data-intro-complete='true'] .intro-gate {
   }
 
   .grid--about {
-    grid-template-columns: minmax(0, 1fr);
+    flex-direction: column;
   }
 
   .projects-grid {
