@@ -114,6 +114,7 @@
         </button>
         <ul id="nav-links" class="nav-links">
           <li><a href="#about" data-nav-link>About</a></li>
+          <li><a href="#skills" data-nav-link>Skills</a></li>
           <li><a href="#projects" data-nav-link>Projects</a></li>
           <li><a href="#playground" data-nav-link>Playground</a></li>
           <li><a href="#contact" data-nav-link>Contact</a></li>
@@ -169,35 +170,38 @@
           </dl>
         </div>
 
-        <aside
-          class="hero-orbit"
-          aria-label="Interactive overview"
-        >
-          <div class="hero-orbit-core">
-            <span class="hero-orbit-label">DJS</span>
-          </div>
-          <button class="hero-orbit-node" data-orbit-node="craft">
-            Craft
-            <span class="hero-orbit-pip hero-orbit-pip--primary"></span>
-          </button>
-          <button class="hero-orbit-node" data-orbit-node="empathy">
-            Empathy
-            <span class="hero-orbit-pip hero-orbit-pip--accent"></span>
-          </button>
-          <button class="hero-orbit-node" data-orbit-node="systems">
-            Systems
-            <span class="hero-orbit-pip hero-orbit-pip--neutral"></span>
-          </button>
-          <button class="hero-orbit-node" data-orbit-node="motion">
-            Motion
-            <span class="hero-orbit-pip hero-orbit-pip--highlight"></span>
-          </button>
-          <p class="hero-orbit-hint">
-            Hover, tap, or use <kbd>Tab</kbd> to explore how I think.
-          </p>
+        <aside class="hero-orbit" aria-label="Interactive overview">
           <div class="hero-orbit-panel" data-orbit-panel>
-            <h3 class="hero-orbit-panel-title" data-orbit-panel-title></h3>
-            <p class="hero-orbit-panel-body" data-orbit-panel-body></p>
+            <p class="hero-orbit-kicker">Design focus</p>
+            <h3 class="hero-orbit-panel-title" data-orbit-panel-title>Craft</h3>
+            <p class="hero-orbit-panel-body" data-orbit-panel-body>
+              How things feel in the hand: typography, rhythm, motion, and the small details that make an interface feel intentional.
+            </p>
+            <p class="hero-orbit-idle-note">
+              This panel gently cycles through Craft, Empathy, Systems, and Motion when you’re idle.
+            </p>
+          </div>
+
+          <div class="hero-orbit-visual">
+            <div class="hero-orbit-core">
+              <span class="hero-orbit-label">DJS</span>
+            </div>
+            <button class="hero-orbit-node" data-orbit-node="craft">
+              Craft
+              <span class="hero-orbit-pip hero-orbit-pip--primary"></span>
+            </button>
+            <button class="hero-orbit-node" data-orbit-node="empathy">
+              Empathy
+              <span class="hero-orbit-pip hero-orbit-pip--accent"></span>
+            </button>
+            <button class="hero-orbit-node" data-orbit-node="systems">
+              Systems
+              <span class="hero-orbit-pip hero-orbit-pip--neutral"></span>
+            </button>
+            <button class="hero-orbit-node" data-orbit-node="motion">
+              Motion
+              <span class="hero-orbit-pip hero-orbit-pip--highlight"></span>
+            </button>
           </div>
         </aside>
       </section>
@@ -249,6 +253,58 @@
               remix, and extend if you want to build your own interactive space.
             </p>
           </article>
+        </div>
+      </section>
+
+      <section id="skills" class="section section--skills reveal" aria-labelledby="skills-title">
+        <header class="section-header">
+          <h2 id="skills-title" class="section-title">Orbiting skill constellation</h2>
+          <p class="section-subtitle">
+            A planetary map of the tools and disciplines I use most often — clustered into core, collaborator, and frontier orbits.
+          </p>
+        </header>
+
+        <div class="skills-orbit-grid">
+          <aside class="skills-orbit-panel" aria-label="Skill details">
+            <p class="skills-orbit-kicker">Current focus</p>
+            <h3 class="skills-orbit-title" data-skill-title>Product &amp; interaction design</h3>
+            <p class="skills-orbit-body" data-skill-body>
+              Before writing code, I map flows, storyboards, and interaction states so the final interface feels inevitable rather than accidental.
+            </p>
+            <ul class="skills-orbit-meta" data-skill-meta>
+              <li>Orbit: Frontier</li>
+              <li>Used for: Framing projects and aligning with teams</li>
+            </ul>
+          </aside>
+
+          <div class="skills-orbit-visual" aria-hidden="true">
+            <div class="skills-orbit-core">
+              <span class="skills-orbit-core-label">Stack</span>
+            </div>
+
+            <div class="skills-orbit-ring skills-orbit-ring--core"></div>
+            <div class="skills-orbit-ring skills-orbit-ring--collab"></div>
+            <div class="skills-orbit-ring skills-orbit-ring--frontier"></div>
+
+            <button class="skills-orbit-node" data-skill-key="js">
+              JS &amp; TypeScript
+            </button>
+            <button class="skills-orbit-node" data-skill-key="css">
+              CSS &amp; Motion
+            </button>
+            <button class="skills-orbit-node" data-skill-key="frontend">
+              Frontend systems
+            </button>
+            <button class="skills-orbit-node" data-skill-key="backend">
+              Python &amp; APIs
+            </button>
+            <button class="skills-orbit-node" data-skill-key="design">
+              Product design
+            </button>
+            <button class="skills-orbit-node" data-skill-key="research">
+              HCI &amp; research
+            </button>
+          </div>
         </div>
       </section>
 

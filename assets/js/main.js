@@ -293,6 +293,53 @@ const orbitDescriptions = {
   }
 };
 
+const skillDescriptions = {
+  js: {
+    title: 'Creative JavaScript',
+    body:
+      'I use JavaScript and TypeScript to stitch together motion, state, and storytelling — from micro-interactions to full experiences and data visualizations.',
+    meta: [
+      'Orbit: Core',
+      'Used in: Experience Lab, People Radar, Creator Journey',
+      'Libraries: Canvas, SVG, WebGL experiments'
+    ]
+  },
+  css: {
+    title: 'CSS & motion systems',
+    body:
+      'Custom keyframes, layered gradients, and variable-driven themes let me express personality while keeping everything performant.',
+    meta: ['Orbit: Core', 'Used for: Hero orbits, page warp, interaction playground']
+  },
+  frontend: {
+    title: 'Frontend architecture',
+    body:
+      'I design components, layout systems, and interaction patterns that scale from a single page to entire design systems.',
+    meta: ['Orbit: Collaborator', 'Focus: Accessibility, semantics, state modeling']
+  },
+  backend: {
+    title: 'Python, AI & APIs',
+    body:
+      'I use Python for data pipelines, AI workflows, and tiny backend services — from FastAPI endpoints to scripts that glue models and visualizations into interfaces.',
+    meta: [
+      'Orbit: Collaborator',
+      'Comfort: Python, FastAPI/Flask, REST',
+      'Tools: NumPy, pandas, Matplotlib, Plotly, AI SDKs'
+    ]
+  },
+  design: {
+    title: 'Product & interaction design',
+    body:
+      'Before writing code, I map flows, storyboards, and interaction states so the final interface feels inevitable rather than accidental.',
+    meta: ['Orbit: Frontier', 'Used for: Framing projects and aligning with teams']
+  },
+  research: {
+    title: 'HCI & qualitative research',
+    body:
+      'I borrow methods from HCI and UX research to observe how people actually move through systems, then reflect that back into the design.',
+    meta: ['Orbit: Frontier', 'Methods: Think-aloud, diary studies, rapid experiments']
+  }
+};
+
 const initProjectModal = () => {
   const modal = document.querySelector('.project-modal');
   const titleEl = modal?.querySelector('[data-modal-title]');
@@ -398,28 +445,178 @@ const initOrbitPanel = () => {
   const panel = document.querySelector('[data-orbit-panel]');
   const panelTitle = panel?.querySelector('[data-orbit-panel-title]');
   const panelBody = panel?.querySelector('[data-orbit-panel-body]');
+  const visual = document.querySelector('.hero-orbit-visual');
 
   if (!nodes.length || !panel || !panelTitle || !panelBody) return;
 
-  const showFor = node => {
-    const key = node.getAttribute('data-orbit-node');
+  const order = ['craft', 'empathy', 'systems', 'motion'];
+  let autoIndex = 0;
+  let autoTimer = null;
+  let userInteracting = false;
+
+  const setActiveKey = key => {
     if (!key || !(key in orbitDescriptions)) return;
     const desc = orbitDescriptions[key];
+
     panelTitle.textContent = desc.title;
     panelBody.textContent = desc.body;
-    panel.setAttribute('data-visible', 'true');
+
+    nodes.forEach(node => {
+      const nodeKey = node.getAttribute('data-orbit-node');
+      const isActive = nodeKey === key;
+      node.classList.toggle('hero-orbit-node--active', isActive);
+    });
+
+    if (visual instanceof HTMLElement) {
+      visual.setAttribute('data-orbit-active', key);
+    }
   };
 
-  const hide = () => {
-    panel.setAttribute('data-visible', 'false');
+  const startAutoCycle = () => {
+    if (autoTimer) return;
+    autoTimer = window.setInterval(() => {
+      if (userInteracting) return;
+      autoIndex = (autoIndex + 1) % order.length;
+      setActiveKey(order[autoIndex]);
+    }, 7000);
+  };
+
+  const stopAutoCycle = () => {
+    if (!autoTimer) return;
+    window.clearInterval(autoTimer);
+    autoTimer = null;
   };
 
   nodes.forEach(node => {
-    node.addEventListener('mouseenter', () => showFor(node));
-    node.addEventListener('focus', () => showFor(node));
-    node.addEventListener('mouseleave', hide);
-    node.addEventListener('blur', hide);
+    const activateFromNode = () => {
+      const key = node.getAttribute('data-orbit-node');
+      if (!key) return;
+      userInteracting = true;
+      stopAutoCycle();
+      autoIndex = Math.max(
+        0,
+        order.findIndex(entry => entry === key)
+      );
+      setActiveKey(key);
+    };
+
+    const releaseInteraction = () => {
+      userInteracting = false;
+      startAutoCycle();
+    };
+
+    node.addEventListener('mouseenter', activateFromNode);
+    node.addEventListener('focus', activateFromNode);
+    node.addEventListener('mouseleave', releaseInteraction);
+    node.addEventListener('blur', releaseInteraction);
   });
+
+  // Initialize with Craft (or whatever the first orbit is) and begin idle cycling.
+  setActiveKey(order[autoIndex]);
+  startAutoCycle();
+};
+
+const initSkillsOrbit = () => {
+  const nodes = document.querySelectorAll('.skills-orbit-node');
+  const titleEl = document.querySelector('[data-skill-title]');
+  const bodyEl = document.querySelector('[data-skill-body]');
+  const metaEl = document.querySelector('[data-skill-meta]');
+  const shell = document.querySelector('.skills-orbit-visual');
+
+  if (!nodes.length || !titleEl || !bodyEl || !metaEl || !shell) return;
+
+  const order = ['js', 'css', 'frontend', 'backend', 'design', 'research'];
+  let currentIndex = 0;
+  const idleDelay = 2000; // wait 2s after last hover/leave
+  const autoPeriod = 9000; // slow auto transition
+  let lastHoverAt = Date.now();
+  let lastAutoChangeAt = Date.now();
+  let isPointerOverShell = false;
+
+  const renderMeta = meta => {
+    metaEl.innerHTML = '';
+    meta.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      metaEl.appendChild(li);
+    });
+  };
+
+  const setActiveSkill = (key, fromUser = false) => {
+    const desc = skillDescriptions[key];
+    if (!desc) return;
+
+    titleEl.textContent = desc.title;
+    bodyEl.textContent = desc.body;
+    renderMeta(desc.meta);
+
+    nodes.forEach(node => {
+      const nodeKey = node.getAttribute('data-skill-key');
+      node.classList.toggle('skills-orbit-node--active', nodeKey === key);
+    });
+
+    if (fromUser) {
+      lastHoverAt = Date.now();
+      lastAutoChangeAt = Date.now();
+    }
+  };
+
+  const setActiveByIndex = (index, fromUser = false) => {
+    currentIndex = (index + order.length) % order.length;
+    setActiveSkill(order[currentIndex], fromUser);
+  };
+
+  // Idle auto-cycler: only runs when pointer is away for at least idleDelay,
+  // and changes skills no faster than autoPeriod.
+  const tick = () => {
+    const now = Date.now();
+    if (!isPointerOverShell) {
+      const idleFor = now - lastHoverAt;
+      const sinceAuto = now - lastAutoChangeAt;
+      if (idleFor >= idleDelay && sinceAuto >= autoPeriod) {
+        setActiveByIndex(currentIndex + 1, false);
+        lastAutoChangeAt = now;
+      }
+    } else {
+      // Keep resetting idle timer while pointer is over the shell.
+      lastHoverAt = now;
+    }
+
+    requestAnimationFrame(tick);
+  };
+
+  nodes.forEach(node => {
+    const handleActivate = () => {
+      const key = node.getAttribute('data-skill-key');
+      if (!key) return;
+      const idx = order.findIndex(k => k === key);
+      if (idx !== -1) {
+        setActiveByIndex(idx, true);
+      } else {
+        setActiveSkill(key, true);
+      }
+    };
+
+    node.addEventListener('mouseenter', handleActivate);
+    node.addEventListener('focus', handleActivate);
+  });
+
+  shell.addEventListener('mouseenter', () => {
+    isPointerOverShell = true;
+    lastHoverAt = Date.now();
+  });
+
+  shell.addEventListener('mouseleave', () => {
+    isPointerOverShell = false;
+    lastHoverAt = Date.now();
+  });
+
+  // Initialize with Product & interaction design as the default focus
+  // and start the idle auto-cycler.
+  currentIndex = order.indexOf('design');
+  if (currentIndex < 0) currentIndex = 0;
+  setActiveByIndex(currentIndex, false);
+  tick();
 };
 
 const initSliders = () => {
@@ -960,9 +1157,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initProjectModal();
   initSliders();
   initImagePlayground();
-   initInlineAlert();
+  initInlineAlert();
   initIntroGate();
   initOrbitPanel();
+  initSkillsOrbit();
   initRevealOnScroll();
   initHeroBigbang();
 });
