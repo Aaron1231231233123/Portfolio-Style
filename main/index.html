@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Denielle James Sombong — Interactive Portfolio</title>
+    <meta
+      name="description"
+      content="The interactive portfolio of Denielle James Sombong — a creative developer crafting human-centered, animated experiences on the web."
+    />
+    <link rel="stylesheet" href="../assets/css/style.css" />
+  </head>
+  <body>
+    <div class="intro-gate" data-intro>
+      <div class="intro-backdrop"></div>
+      <div class="intro-shell" role="dialog" aria-labelledby="intro-title">
+        <div class="intro-album">
+          <div class="intro-album-main">
+            <img
+              src="../assets/img/DJS.jpg"
+              alt="Portrait of Denielle James Sombong"
+              loading="lazy"
+            />
+          </div>
+          <div class="intro-album-stack">
+            <div
+              class="intro-album-tile"
+              data-placeholder="Interface experiments"
+              data-orbit-tag="interface"
+            >
+              <span class="intro-album-planet" aria-hidden="true"></span>
+              <span class="intro-album-sun" aria-hidden="true"></span>
+            </div>
+            <div
+              class="intro-album-tile"
+              data-placeholder="Motion studies"
+              data-orbit-tag="motion"
+            >
+              <span class="intro-album-planet" aria-hidden="true"></span>
+              <span class="intro-album-sun" aria-hidden="true"></span>
+            </div>
+            <div
+              class="intro-album-tile"
+              data-placeholder="Spatial concepts"
+              data-orbit-tag="spatial"
+            >
+              <span class="intro-album-planet" aria-hidden="true"></span>
+              <span class="intro-album-sun" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <div class="intro-copy">
+          <p class="intro-kicker">Entering orbit</p>
+          <h1 id="intro-title" class="intro-title">Denielle James Sombong</h1>
+          <p class="intro-subtitle">
+            A planetary album of work‑in‑progress worlds, interfaces, and ideas.
+          </p>
+          <p class="intro-meta">
+            This short transition sets the tone: layered, motion‑rich, and focused on how
+            it feels to move through an experience.
+          </p>
+          <div class="intro-actions">
+            <button class="btn btn--primary intro-enter" type="button" data-intro-enter>
+              Enter portfolio
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="global-background" aria-hidden="true">
+      <div class="bg-orbit bg-orbit--one"></div>
+      <div class="bg-orbit bg-orbit--two"></div>
+      <div class="bg-orbit bg-orbit--three"></div>
+      <canvas id="parallax-layer"></canvas>
+    </div>
+
+    <div class="page-warp" aria-hidden="true">
+      <div class="page-warp-core"></div>
+      <div class="page-warp-ring page-warp-ring--inner"></div>
+      <div class="page-warp-ring page-warp-ring--outer"></div>
+      <div class="page-warp-orbit page-warp-orbit--one">
+        <div class="page-warp-planet page-warp-planet--cyan"></div>
+      </div>
+      <div class="page-warp-orbit page-warp-orbit--two">
+        <div class="page-warp-planet page-warp-planet--amber"></div>
+      </div>
+      <div class="page-warp-orbit page-warp-orbit--three">
+        <div class="page-warp-planet page-warp-planet--violet"></div>
+      </div>
+    </div>
+
+    <div class="hero-bigbang" aria-hidden="true"></div>
+
+    <div class="page-shell" data-page-shell>
+    <header class="site-header" id="top">
+      <a href="#top" class="brand" aria-label="Back to top">
+        <span class="brand-orb"></span>
+        <span class="brand-text">
+          <span class="brand-name">Denielle&nbsp;James&nbsp;Sombong</span>
+          <span class="brand-role">Creative Developer</span>
+        </span>
+      </a>
+
+      <nav class="site-nav" aria-label="Primary navigation">
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="nav-links"
+        >
+          <span class="nav-toggle-line"></span>
+          <span class="nav-toggle-line"></span>
+        </button>
+        <ul id="nav-links" class="nav-links">
+          <li><a href="#about" data-nav-link>About</a></li>
+          <li><a href="#projects" data-nav-link>Projects</a></li>
+          <li><a href="#playground" data-nav-link>Playground</a></li>
+          <li><a href="#contact" data-nav-link>Contact</a></li>
+        </ul>
+      </nav>
+
+      <button
+        class="mode-toggle"
+        type="button"
+        aria-label="Toggle dark mode"
+        title="Toggle dark mode"
+      >
+        <span class="mode-toggle-icon mode-toggle-icon--sun"></span>
+        <span class="mode-toggle-icon mode-toggle-icon--moon"></span>
+      </button>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-primary">
+          <p class="hero-kicker">Interactive portfolio</p>
+          <h1 id="hero-title" class="hero-title">
+            Hi, I'm <span class="hero-name">Denielle&nbsp;James&nbsp;Sombong</span>
+          </h1>
+          <p class="hero-subtitle">
+            I build playful, high-impact web experiences designed for humans,
+            hiring teams, and creators.
+          </p>
+
+          <div class="hero-actions">
+            <button class="btn btn--primary" data-scroll-to="#projects">
+              Explore projects
+              <span class="btn-orbit"></span>
+            </button>
+            <button class="btn btn--ghost" data-scroll-to="#playground">
+              Enter playground
+            </button>
+          </div>
+
+          <dl class="hero-meta" aria-label="Quick profile">
+            <div class="hero-meta-item">
+              <dt>Focus</dt>
+              <dd>Creative Development · HCI · Frontend Engineering</dd>
+            </div>
+            <div class="hero-meta-item">
+              <dt>Built for</dt>
+              <dd>Human Resources · Hiring Teams · Curious Makers</dd>
+            </div>
+          </dl>
+        </div>
+
+        <aside
+          class="hero-orbit"
+          aria-label="Interactive overview"
+        >
+          <div class="hero-orbit-core">
+            <span class="hero-orbit-label">DJS</span>
+          </div>
+          <button class="hero-orbit-node" data-orbit-node="craft">
+            Craft
+            <span class="hero-orbit-pip hero-orbit-pip--primary"></span>
+          </button>
+          <button class="hero-orbit-node" data-orbit-node="empathy">
+            Empathy
+            <span class="hero-orbit-pip hero-orbit-pip--accent"></span>
+          </button>
+          <button class="hero-orbit-node" data-orbit-node="systems">
+            Systems
+            <span class="hero-orbit-pip hero-orbit-pip--neutral"></span>
+          </button>
+          <button class="hero-orbit-node" data-orbit-node="motion">
+            Motion
+            <span class="hero-orbit-pip hero-orbit-pip--highlight"></span>
+          </button>
+          <p class="hero-orbit-hint">
+            Hover, tap, or use <kbd>Tab</kbd> to explore how I think.
+          </p>
+          <div class="hero-orbit-panel" data-orbit-panel>
+            <h3 class="hero-orbit-panel-title" data-orbit-panel-title></h3>
+            <p class="hero-orbit-panel-body" data-orbit-panel-body></p>
+          </div>
+        </aside>
+      </section>
+
+      <section id="about" class="section section--about reveal">
+        <header class="section-header">
+          <h2 class="section-title">About this portfolio</h2>
+          <p class="section-subtitle">
+            A navigable snapshot of who I am as a creator, how I think about humans,
+            and the kinds of worlds I love to build.
+          </p>
+        </header>
+
+        <div class="grid grid--about">
+          <article class="card card--about card--hoverable">
+            <h3>Built for people</h3>
+            <p>
+              Designed for recruiters, hiring managers, and makers who want to
+              understand how I think, communicate, and build.
+            </p>
+            <p class="card-detail">
+              On hover, you’ll see how I present information so busy people can “get it”
+              in a few seconds without losing the layers underneath.
+            </p>
+          </article>
+
+          <article class="card card--about card--hoverable">
+            <h3>Interaction principles</h3>
+            <ul class="pill-list">
+              <li class="pill">High feedback, low friction</li>
+              <li class="pill">Readable at a glance</li>
+              <li class="pill">Playful, never chaotic</li>
+              <li class="pill">Keyboard & screen-reader friendly</li>
+            </ul>
+            <p class="card-detail">
+              These principles drive every animation and microinteraction, from orbiting
+              planets to how cards expand when you explore them.
+            </p>
+          </article>
+
+          <article class="card card--about card--hoverable">
+            <h3>Tech stack</h3>
+            <p>
+              100% HTML, CSS, and JavaScript — using browser APIs for motion,
+              theming, and state, without external frameworks.
+            </p>
+            <p class="card-detail">
+              The implementation is intentionally transparent: easy to inspect,
+              remix, and extend if you want to build your own interactive space.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="projects" class="section section--projects reveal">
+        <header class="section-header">
+          <h2 class="section-title">Project showcases</h2>
+          <p class="section-subtitle">
+            Click any project card to trigger a cinematic modal reveal with a
+            guided story tailored to hiring teams.
+          </p>
+        </header>
+
+        <div class="projects-grid">
+          <article
+            class="project-card reveal"
+            tabindex="0"
+            data-project-id="experience-lab"
+          >
+            <div class="project-card-orbit"></div>
+            <div class="project-card-inner">
+              <div class="project-card-main">
+                <h3 class="project-title">Experience Lab</h3>
+                <p class="project-tagline">
+                  A playground for testing microinteractions with real people in
+                  minutes.
+                </p>
+              </div>
+              <div class="project-card-reveal">
+                <p class="project-card-reveal-label">Case study focus</p>
+                <p class="project-tagline">
+                  How rapid prototyping and lightweight experiments turned vague ideas
+                  into measurable improvements for teams.
+                </p>
+                <ul class="project-meta">
+                  <li>Role: End‑to‑end designer & developer</li>
+                  <li>Focus: HCI, rapid iteration, usability</li>
+                </ul>
+                <span class="project-cta">Open case study</span>
+              </div>
+            </div>
+            <div class="project-card-orbit-planets" aria-hidden="true">
+              <div class="project-card-orbit-ring-visual"></div>
+              <div class="project-card-planet project-card-planet--saturn"></div>
+              <div class="project-card-planet project-card-planet--jupiter"></div>
+              <div class="project-card-planet project-card-planet--uranus"></div>
+            </div>
+          </article>
+
+          <article
+            class="project-card reveal"
+            tabindex="0"
+            data-project-id="people-radar"
+          >
+            <div class="project-card-orbit"></div>
+            <div class="project-card-inner">
+              <div class="project-card-main">
+                <h3 class="project-title">People Radar</h3>
+                <p class="project-tagline">
+                  A dashboard that turns complex talent signals into simple,
+                  human‑readable stories.
+                </p>
+              </div>
+              <div class="project-card-reveal">
+                <p class="project-card-reveal-label">Case study focus</p>
+                <p class="project-tagline">
+                  How thoughtful information design and motion help leaders see risk,
+                  opportunity, and nuance without drowning in data.
+                </p>
+                <ul class="project-meta">
+                  <li>Role: UX, prototyping, implementation</li>
+                  <li>Focus: HR workflows, sense‑making</li>
+                </ul>
+                <span class="project-cta">Open case study</span>
+              </div>
+            </div>
+            <div class="project-card-orbit-planets" aria-hidden="true">
+              <div class="project-card-orbit-ring-visual"></div>
+              <div class="project-card-planet project-card-planet--saturn"></div>
+              <div class="project-card-planet project-card-planet--jupiter"></div>
+              <div class="project-card-planet project-card-planet--uranus"></div>
+            </div>
+          </article>
+
+          <article
+            class="project-card reveal"
+            tabindex="0"
+            data-project-id="creator-journey"
+          >
+            <div class="project-card-orbit"></div>
+            <div class="project-card-inner">
+              <div class="project-card-main">
+                <h3 class="project-title">Creator Journey</h3>
+                <p class="project-tagline">
+                  A narrative onboarding flow that teaches people to build their
+                  own interactive spaces.
+                </p>
+              </div>
+              <div class="project-card-reveal">
+                <p class="project-card-reveal-label">Case study focus</p>
+                <p class="project-tagline">
+                  How pacing, rewards, and motion can turn hesitation into playful,
+                  self‑directed learning for new creators.
+                </p>
+                <ul class="project-meta">
+                  <li>Role: Narrative design, interaction</li>
+                  <li>Focus: Education, intrinsic motivation</li>
+                </ul>
+                <span class="project-cta">Open case study</span>
+              </div>
+            </div>
+            <div class="project-card-orbit-planets" aria-hidden="true">
+              <div class="project-card-orbit-ring-visual"></div>
+              <div class="project-card-planet project-card-planet--saturn"></div>
+              <div class="project-card-planet project-card-planet--jupiter"></div>
+              <div class="project-card-planet project-card-planet--uranus"></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="playground" class="section section--playground reveal">
+        <header class="section-header">
+          <h2 class="section-title">Interaction playground</h2>
+          <p class="section-subtitle">
+            A safe space to feel the design language — hover, drag, and press
+            keys to see how the interface responds. The controls below change the
+            copy, color, and overall mood of this card so you can sense the design
+            trade‑offs in real time.
+          </p>
+        </header>
+
+        <div class="playground-grid">
+          <article class="card card--play reveal" aria-label="Interactive sliders">
+            <h3>Attention sliders</h3>
+            <p>
+              Move the knobs to see how I balance clarity, play, and speed when
+              designing an experience.
+            </p>
+            <div class="slider-group">
+              <label>
+                Clarity
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="80"
+                  data-play-slider="clarity"
+                />
+              </label>
+              <label>
+                Playfulness
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="65"
+                  data-play-slider="play"
+                />
+              </label>
+              <label>
+                Speed to insight
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="90"
+                  data-play-slider="speed"
+                />
+              </label>
+            </div>
+            <p class="slider-summary" data-slider-summary>
+              Drag the sliders — this description will adapt to match the balance you
+              choose between clarity, play, and speed.
+            </p>
+          </article>
+
+          <article
+            class="card card--play reveal"
+            aria-label="Focus trail"
+          >
+            <h3>Focus trail</h3>
+            <p>
+              Press <kbd>Tab</kbd> to move through this card and watch how focus
+              is visualized without overwhelming the content.
+            </p>
+            <div class="focus-demo">
+              <button class="chip" type="button">Primary action</button>
+              <button class="chip" type="button">Secondary action</button>
+              <button class="chip" type="button">Tertiary action</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="contact" class="section section--contact reveal">
+        <header class="section-header">
+          <h2 class="section-title">Contact</h2>
+          <p class="section-subtitle">
+            Ready to collaborate, or just curious about how this was made?
+            Reach out and let's talk.
+          </p>
+        </header>
+
+        <div class="contact-layout">
+          <form class="contact-form" aria-label="Contact form">
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" autocomplete="name" />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+              />
+            </div>
+            <div class="field">
+              <label for="message">Message</label>
+              <textarea
+                id="message"
+                name="message"
+                rows="4"
+                maxlength="500"
+              ></textarea>
+              <p class="field-hint">
+                This form is a front-end demo. In a live project it would send
+                via an API.
+              </p>
+            </div>
+            <button class="btn btn--primary" type="submit">
+              Send message
+            </button>
+          </form>
+
+          <aside class="contact-aside">
+            <h3>Snapshot for HR & hiring teams</h3>
+            <ul class="contact-points">
+              <li>Location: Remote‑friendly</li>
+              <li>Focus: Frontend, creative tech, interaction design</li>
+              <li>Ways of working: collaborative, prototype‑driven</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer reveal">
+      <p>
+        Crafted for humans, hiring teams, and future creators —
+        <span class="footer-name">Denielle&nbsp;James&nbsp;Sombong</span>
+      </p>
+      <a
+        href="#top"
+        class="btn btn--ghost btn--scroll-top"
+        data-scroll-to="#top"
+      >
+        Back to top
+      </a>
+    </footer>
+    </div>
+
+    <section
+      class="project-modal"
+      aria-modal="true"
+      aria-hidden="true"
+      role="dialog"
+    >
+      <div class="project-modal-backdrop" data-modal-close></div>
+      <div class="project-modal-shell" role="document">
+        <header class="project-modal-header">
+          <p class="project-modal-kicker">Project showcase</p>
+          <h2 class="project-modal-title" data-modal-title></h2>
+          <p class="project-modal-subtitle" data-modal-subtitle></p>
+          <button
+            class="project-modal-close"
+            type="button"
+            aria-label="Close project details"
+            data-modal-close
+          >
+            ✕
+          </button>
+        </header>
+
+        <div class="project-modal-body">
+          <div class="project-modal-orbit">
+            <div class="project-modal-orbit-core"></div>
+            <div class="project-modal-orbit-ring project-modal-orbit-ring--one"></div>
+            <div class="project-modal-orbit-ring project-modal-orbit-ring--two"></div>
+            <div class="project-modal-orbit-ring project-modal-orbit-ring--three"></div>
+          </div>
+          <div class="project-modal-content" data-modal-content></div>
+        </div>
+
+        <footer class="project-modal-footer">
+          <button
+            class="btn btn--primary"
+            type="button"
+            data-modal-close
+          >
+            Return to gallery
+          </button>
+        </footer>
+      </div>
+    </section>
+
+    <script src="../assets/js/main.js"></script>
+  </body>
+</html>
+
+
