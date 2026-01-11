@@ -780,7 +780,7 @@ body:not([data-theme='dark']) .mode-toggle-icon--sun {
     linear-gradient(to bottom right, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.9));
   border: 1px solid rgba(148, 163, 184, 0.45);
   box-shadow: 0 20px 55px rgba(15, 23, 42, 0.9);
-  min-height: 180px;
+  min-height: 160px;
   cursor: pointer;
   overflow: hidden;
   outline: none;

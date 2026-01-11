@@ -532,7 +532,7 @@ const initHeroBigbang = () => {
         },
         { once: true }
       );
-    }, 15000);
+    }, 120000); // Trigger big bang after 2 minutes of idle time
   };
 
   ['mousemove', 'keydown', 'scroll', 'click'].forEach(evt =>
